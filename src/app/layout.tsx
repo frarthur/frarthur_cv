@@ -15,7 +15,7 @@ export const metadata = {
     title: "Arthur Fresse - Portfolio",
     description:
       "Decouvrez le parcours, les projets et les competences d'Arthur Fresse, Ingenieur Generaliste.",
-    url: "https://frarthur.github.io",
+    url: "https://noads.fr/cv",
   },
   twitter: {
     card: "summary_large_image",
