@@ -1,0 +1,4 @@
+{
+  "/api/github-langs/route": "app/api/github-langs/route.js",
+  "/page": "app/page.js"
+}
