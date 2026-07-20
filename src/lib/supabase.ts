@@ -28,6 +28,7 @@ export interface AboutFeatured {
   image: string;
   logo: string;
   link: string;
+  link_url: string;
   title_fr: string;
   title_en: string;
   desc_fr: string;

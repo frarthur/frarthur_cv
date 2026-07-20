@@ -155,6 +155,7 @@ export default function AdminPage() {
 const TABS: { key: string; label: string }[] = [
   { key: "a_propos", label: "A propos" },
   { key: "a_propos_vedette", label: "A propos - Vedette" },
+  { key: "parcours_labels", label: "Parcours - Labels" },
   { key: "parcours_experience", label: "Parcours - Pro & Formation" },
   { key: "parcours_logiciel", label: "Parcours - Logiciels" },
   { key: "projets", label: "Projets" },
@@ -199,6 +200,7 @@ function AdminDashboard({ password, activeTab, setActiveTab }: { readonly passwo
       <div style={{ flex: 1, padding: 30, overflowY: "auto", maxHeight: "100vh" }}>
         {activeTab === "a_propos" && <AboutEditor password={password} />}
         {activeTab === "a_propos_vedette" && <FeaturedEditor password={password} />}
+        {activeTab === "parcours_labels" && <ParcoursLabelsEditor password={password} />}
         {activeTab === "parcours_experience" && <ExperienceEditor password={password} />}
         {activeTab === "parcours_logiciel" && <SoftwareEditor password={password} />}
         {activeTab === "projets" && <ProjectsEditor password={password} />}
@@ -344,10 +346,47 @@ function AboutEditor({ password }: { readonly password: string }) {
   );
 }
 
-type FeaturedRow = { id?: string; image: string; logo: string; link: string; title_fr: string; title_en: string; desc_fr: string; desc_en: string; sort_order: number };
+type FeaturedRow = { id?: string; image: string; logo: string; link: string; link_url: string; title_fr: string; title_en: string; desc_fr: string; desc_en: string; sort_order: number };
+
+function ParcoursLabelsEditor({ password }: { readonly password: string }) {
+  const api = useAdminApi<Record<string, string>[]>(password);
+  const apiSave = useAdminApi<Record<string, string>>(password);
+  const [data, setData] = useState<Record<string, string>>({});
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    api("parcours", "select").then(rows => {
+      if (rows && rows.length > 0) { setData(rows[0]); setLoaded(true); }
+    });
+  }, [api]);
+
+  const onChange = (key: string, value: string) => setData(prev => ({ ...prev, [key]: value }));
+  const handleSave = async () => { await apiSave("parcours", "upsert", { data }); alert("Enregistre !"); };
+
+  if (!loaded) return <p style={{ color: "var(--light-gray-70)" }}>Chargement...</p>;
+
+  return (
+    <div>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
+        <h2 style={sectionTitle}>Labels Parcours</h2>
+        <button onClick={handleSave} style={btnPrimary}>Enregistrer</button>
+      </div>
+      <div style={cardStyle}>
+        {frEnInputs("resume_title", data, onChange)}
+        <div style={{ height: 16 }} />
+        {frEnInputs("experience_label", data, onChange)}
+        {frEnInputs("education_label", data, onChange)}
+        {frEnInputs("skills_label", data, onChange)}
+        {frEnInputs("frameworks_label", data, onChange)}
+        {frEnInputs("software_label", data, onChange)}
+        {frEnInputs("infra_label", data, onChange)}
+      </div>
+    </div>
+  );
+}
 
 function FeaturedEditor({ password }: { readonly password: string }) {
-  const defaultFeatured: FeaturedRow = { image: "", logo: "", link: "", title_fr: "", title_en: "", desc_fr: "", desc_en: "", sort_order: 0 };
+  const defaultFeatured: FeaturedRow = { image: "", logo: "", link: "", link_url: "https://github.com/frarthur", title_fr: "", title_en: "", desc_fr: "", desc_en: "", sort_order: 0 };
   return (
     <ListEditor<FeaturedRow>
       password={password} table="a_propos_vedette" title="Projets en vedette" defaultItem={defaultFeatured}
@@ -356,6 +395,7 @@ function FeaturedEditor({ password }: { readonly password: string }) {
           <label style={labelStyle}>Image URL <input style={inputStyle} value={item.image} onChange={e => setItem({ ...item, image: e.target.value })} /></label>
           <label style={labelStyle}>Logo <input style={inputStyle} value={item.logo} onChange={e => setItem({ ...item, logo: e.target.value })} /></label>
           <label style={labelStyle}>Lien (nom) <input style={inputStyle} value={item.link} onChange={e => setItem({ ...item, link: e.target.value })} /></label>
+          <label style={labelStyle}>Lien URL <input style={inputStyle} value={item.link_url} onChange={e => setItem({ ...item, link_url: e.target.value })} /></label>
           {frEnInputs("title", item as unknown as Record<string, string>, (k, v) => setItem({ ...item, [k]: v }))}
           {frEnTextareas("desc", item as unknown as Record<string, string>, (k, v) => setItem({ ...item, [k]: v }))}
           <label style={labelStyle}>Ordre <input type="number" style={inputStyle} value={item.sort_order} onChange={e => setItem({ ...item, sort_order: Number(e.target.value) })} /></label>
