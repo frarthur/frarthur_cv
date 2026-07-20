@@ -225,7 +225,7 @@ function AboutSection({ lang, activePage, topics, aboutLabels, featuredItems }: 
             {featuredItems.map(p => (
               <li key={p.link} className="showcase-post-item">
                 <a href={p.linkUrl} target="_blank" rel="noopener noreferrer">
-                  <figure className="showcase-banner-box"><img src={p.image} alt="" /></figure>
+                  <figure className="showcase-banner-box">{p.image ? <img src={p.image} alt="" /> : null}</figure>
                   <div className="showcase-content">
                     <div className="showcase-meta">{logoSm(p.logo)}<span className="showcase-link">{p.link}</span></div>
                     <h3 className="h3 showcase-item-title">{_(p.title)}</h3>
@@ -334,7 +334,7 @@ function PortfolioSection({ lang, activePage, projects }: { readonly lang: Lang;
             {projects.map(p => (
               <li key={p.title.fr} className="portfolio-post-item">
                 <a href={p.link} target="_blank" rel="noopener noreferrer">
-                  <figure className="portfolio-banner-box"><img src={p.img} alt={_(p.title)} loading="lazy" /></figure>
+                  <figure className="portfolio-banner-box">{p.img ? <img src={p.img} alt={_(p.title)} loading="lazy" /> : null}</figure>
                   <div className="portfolio-content">
                     <div className="portfolio-meta">{logoSm(p.logo)}<span className="portfolio-category">{_(p.category)}</span></div>
                     <h3 className="h3 portfolio-item-title">{_(p.title)}</h3>
@@ -395,7 +395,7 @@ function GallerySection({ lang, activePage, galleryItems }: { readonly lang: Lan
           {galleryItems.map(item => (
             <div key={item.title.fr} className="card-wrap">
               <div className="card">
-                <div className="card-bg"><img src={item.img} alt={_(item.title)} loading="lazy" /></div>
+                <div className="card-bg">{item.img ? <img src={item.img} alt={_(item.title)} loading="lazy" /> : null}</div>
                 <div className="card-info"><h2>{_(item.title)}</h2><p>{_(item.desc)}</p></div>
               </div>
             </div>
