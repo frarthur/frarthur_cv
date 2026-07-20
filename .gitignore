@@ -13,6 +13,7 @@ vendor/
 .pnpm-store/
 
 # ─── Build / Output ─────────────────────────────────────────────────
+.next/
 dist/
 build/
 out/
