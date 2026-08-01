@@ -40,3 +40,7 @@ Desktop.ini
 logs/
 
 .vercel
+
+# ─── IDE / Build artifacts ───────────────────────────────────────────
+.sonarlint/
+*.tsbuildinfo
